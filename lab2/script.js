@@ -1,6 +1,10 @@
-var database = [];
+var database = {
+  records: [],
+  currentId: 0
+};
 
 var firstTruck = {
+  id: null,
   colors: ['pink', 'yellow'],
   regNumber: 'GDA1243',
   routeInKilometers: 1000,
@@ -12,6 +16,7 @@ var firstTruck = {
 };
 
 var secondTruck = {
+  id: null,
   colors: ['red', 'gray'],
   regNumber: 'WWA7574',
   routeInKilometers: 300,
@@ -23,6 +28,7 @@ var secondTruck = {
 };
 
 var thirdTruck = {
+  id: null,
   colors: ['black', 'green'],
   regNumber: 'NWA8383',
   routeInKilometers: 700,
@@ -34,6 +40,7 @@ var thirdTruck = {
 };
 
 var fourthTruck = {
+  id: null,
   colors: ['white', 'blue'],
   regNumber: 'NBA9900',
   routeInKilometers: 400,
@@ -44,34 +51,101 @@ var fourthTruck = {
   }
 };
 
-function addToDatabase(truck) {
-  database.push(truck);
+function addNewTruck(newTruck) {
+  var alreadyExistingTruck;
+  if (!!database.records.length) {
+    alreadyExistingTruck = database.records
+      .find(function(truck) {
+        return truck.regNumber === newTruck.regNumber;
+      });
+  }
+  if (!!alreadyExistingTruck) {
+    var response = prepareResponse('Truck already exist in database', null);
+    return response;
+  }
+  newTruck.id = ++database.currentId;
+  database.records.push(newTruck);
+
+  var response = prepareResponse('OK', null);
+  return response;
 }
 
-function readAllFromDatabase() {
-  database.forEach(function (truck) {
-    console.log(truck);
+function getAllTrucks() {
+  var response = prepareResponse('OK', database.records);
+  return response;
+}
+
+function findTruckById(id) {
+  var searchedTruck = database.records.find(function(truck) {
+      return truck.id === id;
+    });
+  var msg = !!searchedTruck ? 'OK' : 'Upsss!';
+  var response = prepareResponse(msg, searchedTruck); 
+  return response;
+}
+
+function findByRegNumber(regNumber) {
+  var filterTruck = database.records
+    .filter(function(truck) {
+      return truck.regNumber === regNumber;
+    });
+  var msg = !!filterTruck.length ? 'OK' : 'Upsss!';
+  var response = prepareResponse(msg, filterTruck); 
+  return response;
+}
+
+function findByDriverName(name) {
+  var filterTruck = database.records
+    .filter(function(truck) {
+      return truck.driver.name === name;
+    });
+  var msg = !!filterTruck.length ? 'OK' : 'Upsss!';
+  var response = prepareResponse(msg, filterTruck);
+  return response;
+}
+
+function updateTruck(id, params) {
+  var record = JSON.parse(findTruckById(id));
+  if (record.msg !== 'OK') {
+    var response = prepareResponse(record.msg, null);
+    return response;
+  } 
+  for (var param in params) {
+    if(params.hasOwnProperty(param)) {
+      if (param === 'id') { 
+        var response = prepareResponse('Upsss!', null);
+        return response;
+      }
+      record.data[param] = params[param];
+    }
+  };
+  database.records = database.records
+    .map(function(truck) {
+      if (truck.id === record.data.id) {
+        truck = record.data;
+      }
+      return truck;
+    });
+  var response = prepareResponse('OK', null);
+  return response;
+}
+
+function deleteTruck(id) {
+  var databaseBeforeDeleting = database.records.length;
+  database.records = database.records.filter(function(truck) {
+    return truck.id !== id;
   });
+  var msg = databaseBeforeDeleting > database.records.length
+    ? 'OK'
+    : 'Upsss!';
+  var response = prepareResponse(msg, null);
+  return response;
 }
 
-function findByRegNumber (regNumber) {
-  var filterTruck = database.filter(function(truck) {
-    return truck.regNumber === regNumber;
-  });
-  console.log(filterTruck);
+function prepareResponse(msg, data) {
+  var response = {
+    msg: msg,
+    data: data
+  };
+  return JSON.stringify(response);
 }
-
-function findByDriverName (name) {
-  var filterTruck = database.filter(function(truck) {
-    return truck.driver.name === name;
-  });
-  console.log(filterTruck);
-}
-
-addToDatabase(firstTruck);
-addToDatabase(secondTruck);
-// readAllFromDatabase();
-// findByRegNumber('GDA1243');
-findByDriverName('Maryla');
-addToDatabase(thirdTruck);
-findByDriverName('Maryla');
