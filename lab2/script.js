@@ -11,7 +11,7 @@ var firstTruck = {
   internationalFreight: true,
   driver: {
     name: 'Paweł',
-    age: 45
+    yearOfBirth: 1985
   }
 };
 
@@ -23,7 +23,7 @@ var secondTruck = {
   internationalFreight: false,
   driver: {
     name: 'Janusz',
-    age: 70
+    yearOfBirth: 1951
   }
 };
 
@@ -35,7 +35,7 @@ var thirdTruck = {
   internationalFreight: true,
   driver: {
     name: 'Maryla',
-    age: 39
+    yearOfBirth: 1990
   }
 };
 
@@ -47,7 +47,7 @@ var fourthTruck = {
   internationalFreight: false,
   driver: {
     name: 'Rafał',
-    age: 28
+    yearOfBirth: 1977
   }
 };
 
@@ -76,7 +76,8 @@ function getAllTrucks() {
 }
 
 function findTruckById(id) {
-  var searchedTruck = database.records.find(function(truck) {
+  var searchedTruck = database.records
+    .find(function(truck) {
       return truck.id === id;
     });
   var msg = !!searchedTruck ? 'OK' : 'Upsss!';
