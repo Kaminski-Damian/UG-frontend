@@ -1,3 +1,5 @@
+.*
+
 # Whitelist dotfiles
 !deps/**/.*
 !test/fixtures/**/.*
