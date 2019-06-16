@@ -14,3 +14,9 @@ exports.postTruck = (req, res, next) => {
     .then(() => res.send('OK'))
     .catch(err => console.error(err));
 }
+
+exports.deleteTruck = (req, res, next) => {
+  Truck.delete(req.body.id)
+    .then(() => res.send('OK'))
+    .catch(err => console.error(err));
+}

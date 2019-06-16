@@ -10,7 +10,7 @@ class App extends Component {
   state = {
     trucks: [],
     drivers: [],
-    fracht: []
+    frachts: []
   }
 
   componentDidMount() {
@@ -24,7 +24,7 @@ class App extends Component {
         .find(driver => driver.id === truck.driverId);
       if (!!driver) {
         this.setState({
-          fracht: [ ...this.state.fracht, { ...truck, driver } ]
+          frachts: [ ...this.state.frachts, { ...truck, driver } ]
         });
       }
     });
@@ -84,13 +84,27 @@ class App extends Component {
       .catch(err => console.error(err));
   }
 
+  deleteTruck = (id) => {
+    axios.delete('http://localhost:4000/api/trucks', {
+      data: { id }
+    })
+      .then(() => {
+        const updatedFrachts = this.state.frachts
+          .filter(truck => truck.id !== id );
+        this.setState({
+          frachts: updatedFrachts
+        });
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
       <div className="app">
         <AddDriver addDriver={ this.addDriver } />
         <AddTruck addTruck={ this.addTruck } drivers={ this.state.drivers } />
         <hr />
-        <Trucks trucks={ this.state.fracht } />
+        <Trucks trucks={ this.state.frachts } deleteTruck={ this.deleteTruck } />
       </div>
     );
   }

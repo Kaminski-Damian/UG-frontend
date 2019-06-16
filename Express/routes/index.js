@@ -9,5 +9,6 @@ router.post('/drivers', DriverController.postDriver);
 
 router.get('/trucks', TruckController.getTrucks);
 router.post('/trucks', TruckController.postTruck);
+router.delete('/trucks', TruckController.deleteTruck);
 
 module.exports = router;

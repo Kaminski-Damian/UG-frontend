@@ -1,11 +1,16 @@
 import React from 'react';
  
-const Trucks = ({ trucks }) => {
-    
+const Trucks = ({ trucks, deleteTruck }) => {
+  
+  const deleteFracht = (id) => {
+    deleteTruck(id);
+  }
+
   const truckList = trucks.map(truck => {
      return (
       <div className="truck" key={ truck.id }>
-        <h2>Truck Data</h2>
+        <h2>Truck Data</h2> 
+        <button onClick={ () => deleteFracht(truck.id) }>Delete</button>
           <ul>
             <li>Registration Number: {truck.regNumber}</li>
             <li>Route In Kilometers: {truck.routeInKilometers}</li>

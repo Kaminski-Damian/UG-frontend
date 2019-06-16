@@ -12,7 +12,14 @@ module.exports = class Truck {
     return db.execute(
       'INSERT INTO trucks (regNumber, routeInKilometers, internationalFreight, driverId) VALUES (?, ?, ?, ?)',
       [this.regNumber, this.routeInKilometers, this.internationalFreight, this.driverId]
-    )
+    );
+  }
+
+  static delete(id) {
+    return db.execute(
+      'DELETE FROM trucks WHERE id=?',
+      [id]
+    );
   }
 
   static get() {
